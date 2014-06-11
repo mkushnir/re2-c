@@ -23,10 +23,10 @@ else
 DEBUG_FLAGS = -DNDEBUG -O3
 endif
 
-libre2_c_la_CFLAGS = $(DEBUG_FLAGS) -Wall -Wextra -Werror -std=c99 -I$(includedir)
-libre2_c_la_CXXFLAGS = $(DEBUG_FLAGS) -Wall -Wextra -Werror -I$(includedir)
+libre2_c_la_CFLAGS = $(DEBUG_FLAGS) -Wall -Wextra -Werror -std=c99 -I$(includedir) @MRKCOMMON_LOCAL_CFLAGS@ @RE2_LOCAL_CFLAGS@ $(DEBUG_FLAGS)
+libre2_c_la_CXXFLAGS = -Wall -Wextra -Werror -I$(includedir) @MRKCOMMON_LOCAL_CFLAGS@ @RE2_LOCAL_CFLAGS@ $(DEBUG_FLAGS)
 
-libre2_c_la_LDFLAGS = -version-info 0:0:0 -L$(libdir) -lmrkcommon -lre2
+libre2_c_la_LDFLAGS = -version-info 0:0:0 -L$(libdir) -lmrkcommon @MRKCOMMON_LOCAL_LDFLAGS@ -lre2 @RE2_LOCAL_LDFLAGS@
 
 SUBDIRS = .
 
