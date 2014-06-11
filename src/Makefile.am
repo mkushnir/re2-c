@@ -28,7 +28,7 @@ libre2_c_la_CXXFLAGS = $(DEBUG_FLAGS) -Wall -Wextra -Werror -I$(includedir)
 
 libre2_c_la_LDFLAGS = -version-info 0:0:0 -L$(libdir) -lmrkcommon -lre2
 
-SUBDIRS = . test
+SUBDIRS = .
 
 diag.c diag.h: diag.txt
 	sh ./gen-diag re2_c
