@@ -137,7 +137,7 @@ re2_full_match(re2_ctx_t *re, const char *text)
 
     args = (RE2::Arg **)array_get(&re->matches, 0);
 
-    if (RE2::FullMatchN(sp, (RE2 &)*(re->_re2), args, re->matches.elnum)) {
+    if (RE2::FullMatchN(sp, (RE2 &)(*(RE2 *)(re->_re2)), args, re->matches.elnum)) {
 
         //StringPiece **sp;
         //array_iter_t it;
