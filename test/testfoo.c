@@ -26,6 +26,16 @@ dump_groups(re2_ctx_t *re)
     }
 }
 
+
+static int
+mycb(const char *str, size_t sz, unsigned int idx, UNUSED void *udata)
+{
+    TRACE("match #%d:", idx);
+    D8(str, sz);
+    return 0;
+}
+
+
 static void
 test0(void)
 {
@@ -45,19 +55,19 @@ test0(void)
     //    assert(CDATA.in == CDATA.expected);
     //}
     re = re2_new("(\\d*) ([a-z]* )?(\\d*)");
-    res = re2_full_match(re, "111 22222");
+    res = re2_full_match(re, "111 22222", mycb, NULL);
     TRACE("res=%d", res);
     dump_groups(re);
-    res = re2_full_match(re, "33 qw 45");
+    res = re2_full_match(re, "33 qw 45", mycb, NULL);
     TRACE("res=%d", res);
     dump_groups(re);
     re2_destroy(&re);
 
     re = re2_new("https?://(.*)\\.foo\\.com(/.*)");
-    res = re2_full_match(re, "http://test.foo.com/");
+    res = re2_full_match(re, "http://test.foo.com/", mycb, NULL);
     TRACE("res=%d", res);
     dump_groups(re);
-    res = re2_full_match(re, "https://test.foo.com/path/to");
+    res = re2_full_match(re, "https://test.foo.com/path/to", mycb, NULL);
     TRACE("res=%d", res);
     dump_groups(re);
     re2_destroy(&re);
