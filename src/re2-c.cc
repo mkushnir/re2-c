@@ -129,7 +129,7 @@ re2_pattern(re2_ctx_t *re)
 
 
 int
-re2_full_match(re2_ctx_t *re, const char *text)
+re2_full_match(re2_ctx_t *re, const char *text, re2_match_cb cb, void *udata)
 {
     int res = 1;
     RE2::Arg **args;
@@ -137,17 +137,24 @@ re2_full_match(re2_ctx_t *re, const char *text)
 
     args = (RE2::Arg **)array_get(&re->matches, 0);
 
-    if (RE2::FullMatchN(sp, (RE2 &)(*(RE2 *)(re->_re2)), args, re->matches.elnum)) {
+    if (RE2::FullMatchN(sp,
+                        (RE2 &)(*(RE2 *)(re->_re2)),
+                        args,
+                        re->matches.elnum)) {
 
-        //StringPiece **sp;
-        //array_iter_t it;
+        StringPiece **sp;
+        array_iter_t it;
 
-        //for (sp = (StringPiece **)array_first(&re->mdata, &it);
-        //     sp != NULL;
-        //     sp = (StringPiece **)array_next(&re->mdata, &it)) {
+        for (sp = (StringPiece **)array_first(&re->mdata, &it);
+             sp != NULL;
+             sp = (StringPiece **)array_next(&re->mdata, &it)) {
 
-        //    TRACE("m='%s' l=%d", (*sp)->data(), (*sp)->length());
-        //}
+            if (cb((*sp)->data(), (*sp)->length(), it.iter, udata) != 0) {
+                break;
+            }
+
+            //TRACE("m='%s' l=%d", (*sp)->data(), (*sp)->length());
+        }
         res = 0;
     }
     return res;
