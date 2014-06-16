@@ -12,7 +12,7 @@
 const char *_malloc_options = "AJ";
 #endif
 
-static void
+UNUSED static void
 dump_groups(re2_ctx_t *re)
 {
     int i;
@@ -30,11 +30,30 @@ dump_groups(re2_ctx_t *re)
 static int
 mycb(const char *str, size_t sz, unsigned int idx, UNUSED void *udata)
 {
-    TRACE("match #%d:", idx);
-    D8(str, sz);
+    char *s;
+
+    s = malloc(sz + 1);
+    memcpy(s, str, sz);
+    *(s + sz) = '\0';
+    TRACE("match #%d: %s", idx, s);
+    //D8(str, sz);
+    free(s);
     return 0;
 }
 
+
+static void
+do_re(char *pat, char *str)
+{
+    int res = -1;
+    re2_ctx_t *re;
+
+    re = re2_new(pat);
+    res = re2_full_match(re, str, mycb, NULL);
+    TRACE("res=%d", res);
+    //dump_groups(re);
+    re2_destroy(&re);
+}
 
 static void
 test0(void)
@@ -46,31 +65,34 @@ test0(void)
     } data[] = {
         {0, 0, 0},
     };
-    int res = -1;
-    re2_ctx_t *re;
     UNITTEST_PROLOG_RAND;
 
     //FOREACHDATA {
     //    TRACE("in=%d expected=%d", CDATA.in, CDATA.expected);
     //    assert(CDATA.in == CDATA.expected);
     //}
-    re = re2_new("(\\d*) ([a-z]* )?(\\d*)");
-    res = re2_full_match(re, "111 22222", mycb, NULL);
-    TRACE("res=%d", res);
-    dump_groups(re);
-    res = re2_full_match(re, "33 qw 45", mycb, NULL);
-    TRACE("res=%d", res);
-    dump_groups(re);
-    re2_destroy(&re);
+    //re = re2_new("(\\d*) ([a-z]* )?(\\d*)");
+    //res = re2_full_match(re, "111 22222", mycb, NULL);
+    //TRACE("res=%d", res);
+    //dump_groups(re);
+    //res = re2_full_match(re, "33 qw 45", mycb, NULL);
+    //TRACE("res=%d", res);
+    //dump_groups(re);
+    //re2_destroy(&re);
 
-    re = re2_new("https?://(.*)\\.foo\\.com(/.*)");
-    res = re2_full_match(re, "http://test.foo.com/", mycb, NULL);
-    TRACE("res=%d", res);
-    dump_groups(re);
-    res = re2_full_match(re, "https://test.foo.com/path/to", mycb, NULL);
-    TRACE("res=%d", res);
-    dump_groups(re);
-    re2_destroy(&re);
+    //re = re2_new("https?://(.*)\\.foo\\.com(/.*)");
+    //res = re2_full_match(re, "http://test.foo.com/", mycb, NULL);
+    //TRACE("res=%d", res);
+    //dump_groups(re);
+    //res = re2_full_match(re, "https://test.foo.com/path/to", mycb, NULL);
+    //TRACE("res=%d", res);
+    //dump_groups(re);
+    //re2_destroy(&re);
+    do_re("^https?://[^/]+([^?]+)?(?:.*)$", "http://test.com/1/2/3/asd-456.m3u8?q=1;b=2");
+    do_re("^.*/([^/]+)(?:_(\\d+))?\\.m3u8$", "/1/2/3/asd-456.m3u8");
+    do_re("^.*/([^/]+?)(?:_(\\d+))?\\.m3u8$", "/1/2/3/asd-456_888.m3u8");
+    do_re("^.*/([^/]+?)(?:_(\\d+))?\\.m3u8$", "/1/2/3/asd-456_888_999.m3u8");
+    do_re("^.*/([^/]+)_(\\d+)Num(\\d+)\\.ts$", "/1/2/3/asd-456_888_999Num12321.ts");
 }
 
 int
