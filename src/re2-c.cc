@@ -83,12 +83,12 @@ re2_new(const char *pattern)
 
     }
 
-    TRACE("pat='%s' grp=%d err=%s errno=%d sz=%d",
-          re2_pattern(res),
-          re2_numgroups(res),
-          re2_error(res),
-          re2_error_code(res),
-          re2_program_size(res));
+    //TRACE("pat='%s' grp=%d err=%s errno=%d sz=%d",
+    //      re2_pattern(res),
+    //      re2_numgroups(res),
+    //      re2_error(res),
+    //      re2_error_code(res),
+    //      re2_program_size(res));
 
     return res;
 }
