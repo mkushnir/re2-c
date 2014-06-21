@@ -49,7 +49,7 @@ do_re(char *pat, char *str)
     re2_ctx_t *re;
 
     re = re2_new(pat);
-    res = re2_full_match(re, str, mycb, NULL);
+    res = re2_full_match_cb(re, str, mycb, NULL);
     TRACE("res=%d", res);
     //dump_groups(re);
     re2_destroy(&re);
@@ -71,28 +71,12 @@ test0(void)
     //    TRACE("in=%d expected=%d", CDATA.in, CDATA.expected);
     //    assert(CDATA.in == CDATA.expected);
     //}
-    //re = re2_new("(\\d*) ([a-z]* )?(\\d*)");
-    //res = re2_full_match(re, "111 22222", mycb, NULL);
-    //TRACE("res=%d", res);
-    //dump_groups(re);
-    //res = re2_full_match(re, "33 qw 45", mycb, NULL);
-    //TRACE("res=%d", res);
-    //dump_groups(re);
-    //re2_destroy(&re);
-
-    //re = re2_new("https?://(.*)\\.foo\\.com(/.*)");
-    //res = re2_full_match(re, "http://test.foo.com/", mycb, NULL);
-    //TRACE("res=%d", res);
-    //dump_groups(re);
-    //res = re2_full_match(re, "https://test.foo.com/path/to", mycb, NULL);
-    //TRACE("res=%d", res);
-    //dump_groups(re);
-    //re2_destroy(&re);
     do_re("^https?://[^/]+([^?]+)?(?:.*)$", "http://test.com/1/2/3/asd-456.m3u8?q=1;b=2");
     do_re("^.*/([^/]+)(?:_(\\d+))?\\.m3u8$", "/1/2/3/asd-456.m3u8");
     do_re("^.*/([^/]+?)(?:_(\\d+))?\\.m3u8$", "/1/2/3/asd-456_888.m3u8");
     do_re("^.*/([^/]+?)(?:_(\\d+))?\\.m3u8$", "/1/2/3/asd-456_888_999.m3u8");
     do_re("^.*/([^/]+)_(\\d+)Num(\\d+)\\.ts$", "/1/2/3/asd-456_888_999Num12321.ts");
+    do_re(".*/([^/]+)_(\\d+)Num(\\d+)\\.ts", "/1/2/3/asd-456_888_999Num12321.ts");
 }
 
 int

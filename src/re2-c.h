@@ -27,10 +27,10 @@ int re2_get_group(re2_ctx_t *, int, const char **, int *);
 
 #define RE2_MAX_GROUPS 32
 typedef int (*re2_match_cb)(const char *, size_t, unsigned int, void *);
-int re2_full_match(re2_ctx_t *,
-                   const char *,
-                   re2_match_cb,
-                   void *);
+int re2_full_match_cb(re2_ctx_t *, const char *, re2_match_cb, void *);
+int re2_full_match(re2_ctx_t *, const char *);
+int re2_partial_match_cb(re2_ctx_t *, const char *, re2_match_cb, void *);
+int re2_partial_match(re2_ctx_t *, const char *);
 
 #ifdef __cplusplus
 }
