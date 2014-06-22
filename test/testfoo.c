@@ -51,6 +51,8 @@ do_re(char *pat, char *str)
     re = re2_new(pat);
     res = re2_full_match_cb(re, str, mycb, NULL);
     TRACE("res=%d", res);
+    res = re2_partial_match_cb(re, str, mycb, NULL);
+    TRACE("res=%d", res);
     //dump_groups(re);
     re2_destroy(&re);
 }
@@ -71,12 +73,16 @@ test0(void)
     //    TRACE("in=%d expected=%d", CDATA.in, CDATA.expected);
     //    assert(CDATA.in == CDATA.expected);
     //}
-    do_re("^https?://[^/]+([^?]+)?(?:.*)$", "http://test.com/1/2/3/asd-456.m3u8?q=1;b=2");
-    do_re("^.*/([^/]+)(?:_(\\d+))?\\.m3u8$", "/1/2/3/asd-456.m3u8");
-    do_re("^.*/([^/]+?)(?:_(\\d+))?\\.m3u8$", "/1/2/3/asd-456_888.m3u8");
-    do_re("^.*/([^/]+?)(?:_(\\d+))?\\.m3u8$", "/1/2/3/asd-456_888_999.m3u8");
-    do_re("^.*/([^/]+)_(\\d+)Num(\\d+)\\.ts$", "/1/2/3/asd-456_888_999Num12321.ts");
-    do_re(".*/([^/]+)_(\\d+)Num(\\d+)\\.ts", "/1/2/3/asd-456_888_999Num12321.ts");
+    //do_re("^https?://[^/]+([^?]+)?(?:.*)$", "http://test.com/1/2/3/asd-456.m3u8?q=1;b=2");
+    //do_re("^.*/([^/]+)(?:_(\\d+))?\\.m3u8$", "/1/2/3/asd-456.m3u8");
+    //do_re("^.*/([^/]+?)(?:_(\\d+))?\\.m3u8$", "/1/2/3/asd-456_888.m3u8");
+    //do_re("^.*/([^/]+?)(?:_(\\d+))?\\.m3u8$", "/1/2/3/asd-456_888_999.m3u8");
+    //do_re("^.*/([^/]+)_(\\d+)Num(\\d+)\\.ts$", "/1/2/3/asd-456_888_999Num12321.ts");
+    //do_re(".*/([^/]+)_(\\d+)Num(\\d+)\\.ts", "/1/2/3/asd-456_888_999Num12321.ts");
+
+    do_re("/([^/]+)_(\\d+)Num(\\d+)\\.ts", "http://test.com/1/2/3/asd-456_888_999Num12321.ts");
+    do_re("/([^/]+)_(\\d+)Num(\\d+)\\.ts", "http://test.com/1/2/3/asd-456_888_999Num12321.ts?a=1;b=2");
+    do_re("/([^/]+)_(\\d+)Num(\\d+)\\.ts", "http://test.com/1/2/3/asd-456_888_999");
 }
 
 int
